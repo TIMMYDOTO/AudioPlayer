@@ -78,25 +78,23 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
                 for result in results as! [NSManagedObject]
                 {
                     
-                    print(result.description)
-                    path.append(result.value(forKey: "path") as! String)
-                    name.append(result.value(forKey: "name") as! String)
+                
+                    path = (result.value(forKey: "path") as! String)
+                    name = (result.value(forKey: "name") as! String)
                     length = (result.value(forKey: "duration") as! String)
                     date = (result.value(forKey: "date") as! String)
                     time = (result.value(forKey: "time") as! String)
                     
                     self.dataSource.append(AudioRecord.init(duration: length, filePath: path, fileName: name, time:time, date: date))
                     
-                    path = ""
-                    name = ""
+    
                 }
             }
         }
         catch{
             
         }
-        
-        
+
     }
     
     func updateAudioMeter(_ timer:Timer) {
@@ -130,7 +128,7 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
             return
         }
         
-        if recorder != nil && recorder.isRecording {
+        if recorder.isRecording {
             print("pausing")
             recordButton.setBackgroundImage(UIImage (named: "start"), for: .normal)
             recorder?.stop()
@@ -138,7 +136,7 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
             let session = AVAudioSession.sharedInstance()
             do {
                 try session.setActive(false)
-                recordButton.isEnabled = true
+               // recordButton.isEnabled = true
             } catch {
 
                 print(error.localizedDescription)
@@ -169,7 +167,6 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
                 player.prepareToPlay()
                 player.play()
             }
-            
             
         }
         
@@ -240,7 +237,7 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
         currentDate = formater.string(from: Date())
         
         let currentDateFormatter = DateFormatter()
-        currentDateFormatter.dateFormat =  "mm:ss"
+        currentDateFormatter.dateFormat =  "hh:mm:ss"
         currentTime = currentDateFormatter.string(from: Date())
         
         
@@ -370,8 +367,6 @@ extension ViewController3 : AVAudioRecorderDelegate {
                 
 
                 self.tableView.reloadData()
-                
-                
             }
                 
             catch {
