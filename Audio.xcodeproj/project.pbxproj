@@ -19,8 +19,6 @@
 		9FB1D9231F137D6900B3D403 /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 9FB1D9221F137D6900B3D403 /* stop.png */; };
 		9FB1D9251F137E7200B3D403 /* start.png in Resources */ = {isa = PBXBuildFile; fileRef = 9FB1D9241F137E7200B3D403 /* start.png */; };
 		9FB1D92D1F139BF800B3D403 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9FB1D92B1F139BF800B3D403 /* Model.xcdatamodeld */; };
-		9FB1D92F1F139FBD00B3D403 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FB1D92E1F139FBD00B3D403 /* CoreDataService.swift */; };
-		9FB1D9511F13CFE400B3D403 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FB1D92E1F139FBD00B3D403 /* CoreDataService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,7 +57,6 @@
 		9FB1D9221F137D6900B3D403 /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stop.png; path = "../../../Downloads/DD Media Player Icon Collection 75643/stop.png"; sourceTree = "<group>"; };
 		9FB1D9241F137E7200B3D403 /* start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = start.png; path = "../../../Downloads/DD Media Player Icon Collection 75643 2/start.png"; sourceTree = "<group>"; };
 		9FB1D92C1F139BF800B3D403 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
-		9FB1D92E1F139FBD00B3D403 /* CoreDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,7 +111,6 @@
 				9FB1D8DF1F0FB06E00B3D403 /* ViewController3.swift */,
 				9F382BC71F13DB190082E528 /* TableViewCell.swift */,
 				9F382BC51F13D1160082E528 /* AudioRecord.swift */,
-				9FB1D92E1F139FBD00B3D403 /* CoreDataService.swift */,
 				9FB1D92B1F139BF800B3D403 /* Model.xcdatamodeld */,
 				9FB1D8B31F0F99E100B3D403 /* Main.storyboard */,
 				9FB1D8B61F0F99E100B3D403 /* Assets.xcassets */,
@@ -285,7 +281,6 @@
 				9FB1D92D1F139BF800B3D403 /* Model.xcdatamodeld in Sources */,
 				9FB1D8E01F0FB06E00B3D403 /* ViewController3.swift in Sources */,
 				9F382BC81F13DB190082E528 /* TableViewCell.swift in Sources */,
-				9FB1D92F1F139FBD00B3D403 /* CoreDataService.swift in Sources */,
 				9F382BC61F13D1160082E528 /* AudioRecord.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -302,7 +297,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9FB1D9511F13CFE400B3D403 /* CoreDataService.swift in Sources */,
 				9FB1D8D01F0F99E100B3D403 /* AudioUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

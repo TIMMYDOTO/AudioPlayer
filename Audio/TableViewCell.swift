@@ -11,10 +11,10 @@ import UIKit
 class TableViewCell: UITableViewCell {
 
     @IBOutlet weak var duration: UILabel!
-    @IBOutlet weak var name: UILabel!
-    
-    
-    @IBOutlet weak var StartStop: UIButton!
+    @IBOutlet weak var startStopImage: UIImageView!
+    @IBOutlet weak var date: UILabel!
+    @IBOutlet weak var time: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

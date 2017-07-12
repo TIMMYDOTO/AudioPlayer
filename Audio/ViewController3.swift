@@ -18,23 +18,25 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
     var player:AVAudioPlayer!
     var dataSource:[AudioRecord] = []
     
-    // var smth = CoreDataService()
-    // var appdel:AppDelegate!
     var url:URL?
     var path:String = ""
     var name:String = ""
     var length:String = ""
-    @IBOutlet weak var duration: UILabel!
-    @IBOutlet weak var nameOfFile: UILabel!
+    
+    var date:String = ""
+    var time:String = ""
+    
+    
+  
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
-  //  @IBOutlet weak var stopButton: UIButton!
-    @IBOutlet weak var playButton: UIButton!
+    
     @IBOutlet weak var recordButton: UIButton!
     var currentFileName:String = ""
     var meterTimer:Timer!
+    var currentDate:String = ""
+    var currentTime:String = ""
     
-
     func deleteAllData(entity: String)
     {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -55,14 +57,12 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
         }
     }
     
-    @IBAction func StartStopAction(_ sender: Any) {
-        print("sender::",sender)
-    }
+  
     override func viewDidLoad() {
         super.viewDidLoad()
         
- //self.deleteAllData(entity: "AudioData")
         
+        //  self.deleteAllData(entity: "AudioData")
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
@@ -78,23 +78,15 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
                 for result in results as! [NSManagedObject]
                 {
                     
-                    //       path = result.value(forKey: "path") as? String
                     print(result.description)
                     path.append(result.value(forKey: "path") as! String)
-                    print("path:", self.path as Any)
                     name.append(result.value(forKey: "name") as! String)
-                    print("name12: ", self.name as Any)
-                    
-                    
                     length = (result.value(forKey: "duration") as! String)
+                    date = (result.value(forKey: "date") as! String)
+                    time = (result.value(forKey: "time") as! String)
                     
-                    print("length:", self.length )
-                    self.dataSource.append(AudioRecord.init(duration: length, filePath: path, fileName: name))
+                    self.dataSource.append(AudioRecord.init(duration: length, filePath: path, fileName: name, time:time, date: date))
                     
-                    
-                    print("pathhhhhh", result.value(forKey: "path") as! String)
-                    //     self.dataSource.append(AudioRecord.init(duration: Int64(self.length!)!, filePath: path))
-                    //tableView.reloadData()
                     path = ""
                     name = ""
                 }
@@ -103,15 +95,7 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
         catch{
             
         }
-      
-        url = URL(string: "")
         
-        
-        
-        
-    }
-    
-    @IBAction func playB(_ sender: Any) {
         
     }
     
@@ -139,9 +123,9 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
         if recorder == nil {
             print("recording. recorder nil")
             recordButton.setBackgroundImage(UIImage (named: "stop"), for: .normal)
-          
-            playButton.isEnabled = false
-           // stopButton.isEnabled = true
+            
+            
+            
             recordWithPermission(true)
             return
         }
@@ -154,122 +138,49 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
             let session = AVAudioSession.sharedInstance()
             do {
                 try session.setActive(false)
-                playButton.isEnabled = true
-               // stopButton.isEnabled = false
                 recordButton.isEnabled = true
             } catch {
-                print("could not make session inactive")
+
                 print(error.localizedDescription)
             }
-
-     
+            
+            
             
         } else {
             print("recording")
-      
-        
-            playButton.isEnabled = false
-       //     stopButton.isEnabled = true
-            //            recorder.record()
+            
             recordWithPermission(false)
         }
     }
     
-//    @IBAction func stopButton(_ sender: Any) {
-//        recordButton.setBackgroundImage(UIImage (named: "start"), for: .normal)
-//        recorder?.stop()
-//        player?.stop()
-//        
-//        
-//        
-//        
-//        // recordButton.setTitle("Record", for: .normal)
-//        let session = AVAudioSession.sharedInstance()
-//        do {
-//            try session.setActive(false)
-//            playButton.isEnabled = true
-//            stopButton.isEnabled = false
-//            recordButton.isEnabled = true
-//        } catch {
-//            print("could not make session inactive")
-//            print(error.localizedDescription)
-//        }
-//    }
-    @IBAction func play(_ sender: Any) {
-        //   print("sender:1 ",sender)
-        play()
-    }
-    
-    //
-    func play() {
-//        print("\(#function)")
-//        
-//        
-//        
-//        if self.recorder != nil {
-//            url = self.recorder.url // !url
-//        } else {
-//            url = self.soundFileURL!
-//        }
-//        print("playing",  url!)
-//        
-//        do {
-//            
-//            
-//            self.player = try AVAudioPlayer(contentsOf: url!)
-//            //  print("player.duration12", player.url ?? "a")
-//            
-//            stopButton.isEnabled = true
-//            player.delegate = self
-//            // player.prepareToPlay()
-//            player.volume = 1.0
-//            player.play()
-//            print("playing")
-//        } catch {
-//            self.player = nil
-//            print(error.localizedDescription)
-//        }
-        //   return player
-    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let cell = self.tableView.cellForRow(at: indexPath) as! TableViewCell
-    cell.StartStop.setBackgroundImage(UIImage(named: "stop"), for: .normal)
-       
+        let cell = self.tableView.cellForRow(at: indexPath) as! TableViewCell
+        cell.startStopImage.image = UIImage (named: "stop")
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-         let fileUrl = documentsDirectory.appendingPathComponent(dataSource[indexPath.row].name)
+        let fileUrl = documentsDirectory.appendingPathComponent(dataSource[indexPath.row].name)
         if dataSource[indexPath.row].name == "" {
             dataSource[indexPath.row].name = String(describing: documentsDirectory)
-          print("dataSource[indexPath.row].name = String(describing: documentsDirectory)", dataSource[indexPath.row].name = String(describing: documentsDirectory))
-         
+            print("dataSource[indexPath.row].name = String(describing: documentsDirectory)", dataSource[indexPath.row].name = String(describing: documentsDirectory))
+            
             do {
                 
-              
-               // self.player = try AVAudioPlayer(contentsOf: )
-                
-              //  stopButton.isEnabled = true
                 player.delegate = self
                 player.volume = 1.0
                 player.prepareToPlay()
                 player.play()
             }
-            catch{
-                print(error.localizedDescription)
-            }
+            
             
         }
         
-        // print("dataSource[indexPath.row]", dataSource[indexPath.row])
-        //  print("dataSource::1",dataSource[indexPath.row].value(forKey: "filePath") as Any)
-       	
-  	
         print("dataSource::2",dataSource[indexPath.row].filePath)
-         print("playing",  fileUrl)
+        print("playing",  fileUrl)
         do {
             
             print("fileUrl12", fileUrl)
             self.player = try AVAudioPlayer(contentsOf: fileUrl)
-           
-       //     stopButton.isEnabled = true
+            
+            
             player.delegate = self
             player.volume = 1.0
             player.prepareToPlay()
@@ -278,50 +189,36 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
         catch{
             print(error.localizedDescription)
         }
-      
-        
     }
-    func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int
-    {
-        //   print("self.dataSource.count", self.dataSource.count)
+    
+    
+    func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int{
+        
         return dataSource.count
-        
     }
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TableViewCell
+        let index = dataSource[indexPath.row].duration.index(dataSource[indexPath.row].duration.startIndex, offsetBy:4)
         
         cell.backgroundColor = UIColor.lightGray
-        //        if soundFileURL != nil {
-        //            do {
-        //                self.player = try AVAudioPlayer (contentsOf: soundFileURL!)
-        //                print("Cell soundFileURL", soundFileURL)
-        //            }
-        //
-        //            catch {
-        //                print("smth bad happened")
-        //            }
-        //
-        //        }
         
-       
-        cell.StartStop.setBackgroundImage(UIImage(named: "start"), for: .normal)
-        cell.name.text = dataSource[indexPath.row].name
-        cell.duration.text = String(dataSource[indexPath.row].duration)
+        cell.startStopImage.image = UIImage (named: "start")
         
-        if dataSource[indexPath.row].name == "" {
-            cell.name.text = dataSource[indexPath.row].filePath
-        }
-        
-        
+        cell.duration.text = dataSource[indexPath.row].duration.substring(to: index)
+        cell.date.text = dataSource[indexPath.row].date
+        cell.time.text = dataSource[indexPath.row].time
         
         
         
         return cell
     }
+    
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            print("indexPath.row", indexPath.row)
             self.dataSource.remove(at: indexPath.row)
             
             self.tableView.reloadData()
@@ -330,13 +227,21 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Records";
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         recorder = nil
         player = nil
-        // Dispose of any resources that can be recreated.
+        
     }
     func setupRecorder() {
+        let formater = DateFormatter()
+        formater.dateFormat="yyyy.MM.dd"
+        currentDate = formater.string(from: Date())
+        
+        let currentDateFormatter = DateFormatter()
+        currentDateFormatter.dateFormat =  "mm:ss"
+        currentTime = currentDateFormatter.string(from: Date())
         
         
         let format = DateFormatter()
@@ -351,11 +256,11 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
         self.soundFileURL = documentsDirectory.appendingPathComponent(currentFileName)
         
         print("soundFileURL1.description ",soundFileURL.description)
-  
+        
         print("writing to soundfile url: '\(soundFileURL!)'")
         
         if FileManager.default.fileExists(atPath: soundFileURL.absoluteString) {
-            // probably won't happen. want to do something about it?
+            // probably won't happen
             print("soundfile \(soundFileURL.absoluteString) exists")
         }
         
@@ -434,16 +339,6 @@ class ViewController3: UIViewController, UITableViewDataSource, UITableViewDeleg
             print(error.localizedDescription)
         }
     }
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }
 
 extension ViewController3 : AVAudioRecorderDelegate {
@@ -460,36 +355,20 @@ extension ViewController3 : AVAudioRecorderDelegate {
         
         let newFile = NSEntityDescription.insertNewObject(forEntityName: "AudioData", into: context)
         
-        
-        print("dataSource", dataSource)
-        
         print("finished recording \(flag)")
-     //   stopButton.isEnabled = false
-        playButton.isEnabled = true
-        // recordButton.setTitle("Record", for:UIControlState())
         
-        // iOS8 and later
         let alert = UIAlertController(title: "Recorder",
                                       message: "Finished Recording",
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Keep", style: .default, handler: {action in
             print("keep was tapped")
             
-          
-            
-            print("dataSource.count", self.dataSource.count)
-            
-            
-            
-            // newFile.valueForKey:"name"
-            
-            
             do {
                 
                 self.player = try AVAudioPlayer (contentsOf: self.soundFileURL!)
-                self.dataSource.append(AudioRecord.init(duration: String(self.player.duration), filePath: "\(self.soundFileURL)", fileName: self.name))
+                self.dataSource.append(AudioRecord.init(duration: String(self.player.duration), filePath: "\(self.soundFileURL!)", fileName: self.currentFileName, time:self.currentTime, date:self.currentDate))
                 
-                print("self.dataSource ", self.dataSource[0].value(forKey: "duration")!)
+
                 self.tableView.reloadData()
                 
                 
@@ -501,7 +380,9 @@ extension ViewController3 : AVAudioRecorderDelegate {
             newFile.setValue(String(self.player.duration), forKey: "duration")
             newFile.setValue(self.currentFileName, forKey: "name")
             newFile.setValue(self.soundFileURL.description, forKey: "path")
-            //     newFile.setValue(Int64 (self.recorder.description), forKey: "duration")
+            newFile.setValue(self.currentDate, forKey: "date")
+            newFile.setValue(self.currentTime, forKey: "time")
+            
             do {
                 try context.save()
                 print("probably saved")
@@ -530,8 +411,6 @@ extension ViewController3 : AVAudioRecorderDelegate {
             print("\(e.localizedDescription)")
         }
     }
-    
-    
 }
 
 // MARK: AVAudioPlayerDelegate
@@ -540,16 +419,16 @@ extension ViewController3 : AVAudioPlayerDelegate {
         print("\(#function)")
         
         tableView.reloadData()
-      
-   
+        
+        
         print("finished playing \(flag)")
         recordButton.isEnabled = true
-      //  stopButton.isEnabled = false
+        
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         print("\(#function)")
-      
+        
         if let e = error {
             print("\(e.localizedDescription)")
         }
